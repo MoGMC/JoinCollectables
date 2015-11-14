@@ -12,6 +12,7 @@ import java.util.Calendar;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -81,9 +82,7 @@ public class JoinCollectablesPlugin extends JavaPlugin implements Listener {
 
 		daypath = monthpath + "." + c.get(Calendar.DAY_OF_MONTH);
 
-		monthpath = monthpath.concat(".month");
-
-		monthaward = calendar.getString(monthpath);
+		monthaward = calendar.getString(monthpath + ".month");
 
 		monthlevel = c.getActualMaximum(Calendar.DAY_OF_MONTH) - c.get(Calendar.DAY_OF_MONTH) + 1;
 
@@ -104,6 +103,7 @@ public class JoinCollectablesPlugin extends JavaPlugin implements Listener {
 
 	}
 
+	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent e) {
 
 		// if the player hasn't played before, give them the new player award!
