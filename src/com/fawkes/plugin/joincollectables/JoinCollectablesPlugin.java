@@ -34,6 +34,8 @@ public class JoinCollectablesPlugin extends JavaPlugin implements Listener {
 	@Override
 	public void onEnable() {
 
+		saveDefaultConfig();
+
 		/* Load calendar yaml from url */
 		try {
 
@@ -96,6 +98,9 @@ public class JoinCollectablesPlugin extends JavaPlugin implements Listener {
 			dayaward = calendar.getString(daypath);
 
 		}
+
+		// registers this plugin's listeners
+		Bukkit.getPluginManager().registerEvents(this, this);
 
 	}
 
