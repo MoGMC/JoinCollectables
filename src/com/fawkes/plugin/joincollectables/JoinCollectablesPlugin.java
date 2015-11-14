@@ -61,9 +61,6 @@ public class JoinCollectablesPlugin extends JavaPlugin implements Listener {
 
 		}
 
-		// loads the plugin for API usage
-		plugin = this.getServer().getServicesManager().load(CollectablesPlugin.class);
-
 		// gets the month and day and gets their respective awards
 		String monthpath;
 		String daypath;
@@ -100,6 +97,11 @@ public class JoinCollectablesPlugin extends JavaPlugin implements Listener {
 
 		// registers this plugin's listeners
 		Bukkit.getPluginManager().registerEvents(this, this);
+
+		Bukkit.getLogger().info("Enabling with month award: " + monthaward + "and day award: " + dayaward);
+
+		// loads the plugin for API usage
+		plugin = this.getServer().getServicesManager().load(CollectablesPlugin.class);
 
 	}
 
