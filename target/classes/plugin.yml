@@ -1,0 +1,3 @@
+name: JoinCollectables
+main: com.fawkes.plugin.joincollectables.JoinCollectablesPlugin
+version: 0.1-SNAPSHOT
