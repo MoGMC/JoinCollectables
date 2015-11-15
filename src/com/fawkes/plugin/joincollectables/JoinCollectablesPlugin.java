@@ -8,6 +8,7 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.sql.SQLException;
 import java.util.Calendar;
+import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -27,6 +28,8 @@ public class JoinCollectablesPlugin extends JavaPlugin implements Listener {
 	String dayaward;
 
 	int monthlevel;
+
+	Random rand = new Random();
 
 	boolean specialDay = false;
 
@@ -124,7 +127,7 @@ public class JoinCollectablesPlugin extends JavaPlugin implements Listener {
 		// check if the player has this month's award
 		if (!plugin.hasAward(e.getPlayer().getUniqueId(), monthaward)) {
 			try {
-				plugin.giveAward(e.getPlayer().getUniqueId(), monthaward, monthlevel);
+				plugin.giveAward(e.getPlayer().getUniqueId(), monthaward, getRandLevel());
 
 			} catch (SQLException er) {
 				Bukkit.getLogger()
@@ -138,8 +141,7 @@ public class JoinCollectablesPlugin extends JavaPlugin implements Listener {
 		if (specialDay) {
 			if (!plugin.hasAward(e.getPlayer().getUniqueId(), dayaward)) {
 				try {
-					plugin.giveAward(e.getPlayer().getUniqueId(), dayaward,
-							24 - Calendar.getInstance().get(Calendar.HOUR_OF_DAY));
+					plugin.giveAward(e.getPlayer().getUniqueId(), dayaward, getRandLevel());
 
 				} catch (SQLException er) {
 					Bukkit.getLogger()
@@ -151,6 +153,11 @@ public class JoinCollectablesPlugin extends JavaPlugin implements Listener {
 			}
 
 		}
+
+	}
+
+	public int getRandLevel() {
+		return 1 + rand.nextInt(99);
 
 	}
 
