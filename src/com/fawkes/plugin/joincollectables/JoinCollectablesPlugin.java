@@ -19,19 +19,24 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.fawkes.plugin.collectables.CollectablesPlugin;
+import com.fawkes.plugin.collectables.QueryAward;
 
 public class JoinCollectablesPlugin extends JavaPlugin implements Listener {
 
+	/*
+	 * check every time a person joins RATHER than whatever
+	 * 
+	 */
 	private CollectablesPlugin plugin;
 
 	String monthaward;
 	String dayaward;
 
-	int monthlevel;
-
 	Random rand = new Random();
 
 	boolean specialDay = false;
+
+	int day;
 
 	FileConfiguration calendar;
 
@@ -64,39 +69,8 @@ public class JoinCollectablesPlugin extends JavaPlugin implements Listener {
 
 		}
 
-		// gets the month and day and gets their respective awards
-		String monthpath;
-		String daypath;
-
-		Calendar c = Calendar.getInstance();
-
-		monthpath = c.get(Calendar.YEAR) + "." + (c.get(Calendar.MONTH) + 1);
-
-		if (!calendar.contains(monthpath + ".month")) {
-			// this shouldn't really ever happen
-			Bukkit.getLogger().severe("This month does not have an entry, disabling.");
-			Bukkit.getPluginManager().disablePlugin(this);
-			return;
-
-		}
-
-		daypath = monthpath + "." + c.get(Calendar.DAY_OF_MONTH);
-
-		monthaward = calendar.getString(monthpath + ".month");
-
-		monthlevel = c.getActualMaximum(Calendar.DAY_OF_MONTH) - c.get(Calendar.DAY_OF_MONTH) + 1;
-
-		// if it's the first day of the month, give them something special
-		if (c.get(Calendar.DAY_OF_MONTH) == 1) {
-			monthlevel = 99;
-
-		}
-
-		if (calendar.contains(daypath)) {
-			specialDay = true;
-			dayaward = calendar.getString(daypath);
-
-		}
+		// important
+		refreshCalendar();
 
 		// registers this plugin's listeners
 		Bukkit.getPluginManager().registerEvents(this, this);
@@ -108,13 +82,54 @@ public class JoinCollectablesPlugin extends JavaPlugin implements Listener {
 
 	}
 
+	// refreshes calendar and awards
+	public void refreshCalendar() {
+		specialDay = false;
+
+		String monthpath;
+		String daypath;
+
+		Calendar c = Calendar.getInstance();
+
+		monthpath = c.get(Calendar.YEAR) + "." + (c.get(Calendar.MONTH) + 1);
+
+		if (!calendar.contains(monthpath + ".month")) {
+			// this shouldn't really ever happen
+			// WOOWOW PLAENT CRASH
+			Bukkit.getLogger().severe("This month does not have an entry, disabling.");
+			Bukkit.getPluginManager().disablePlugin(this);
+			return;
+
+		}
+
+		day = c.get(Calendar.DAY_OF_MONTH);
+
+		daypath = monthpath + day;
+
+		monthaward = calendar.getString(monthpath + ".month");
+
+		if (calendar.contains(daypath)) {
+			specialDay = true;
+			dayaward = calendar.getString(daypath);
+
+		}
+
+	}
+
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent e) {
+
+		if (Calendar.getInstance().get(Calendar.DAY_OF_MONTH) != day) {
+			// WOWOOW PLAENT SHIFTS BEEP BEEP
+			refreshCalendar();
+
+		}
 
 		// if the player hasn't played before, give them the new player award!
 		if (!e.getPlayer().hasPlayedBefore()) {
 			try {
-				plugin.giveAward(e.getPlayer().getUniqueId(), "newplayer", 1);
+				plugin.giveAward(e.getPlayer().getUniqueId(),
+						new QueryAward("newplayer", System.currentTimeMillis(), 1));
 
 			} catch (SQLException er) {
 				Bukkit.getLogger()
@@ -127,7 +142,8 @@ public class JoinCollectablesPlugin extends JavaPlugin implements Listener {
 		// check if the player has this month's award
 		if (!plugin.hasAward(e.getPlayer().getUniqueId(), monthaward)) {
 			try {
-				plugin.giveAward(e.getPlayer().getUniqueId(), monthaward, getRandLevel());
+				plugin.giveAward(e.getPlayer().getUniqueId(),
+						new QueryAward(monthaward, System.currentTimeMillis(), getRandLevel()));
 
 			} catch (SQLException er) {
 				Bukkit.getLogger()
@@ -141,7 +157,8 @@ public class JoinCollectablesPlugin extends JavaPlugin implements Listener {
 		if (specialDay) {
 			if (!plugin.hasAward(e.getPlayer().getUniqueId(), dayaward)) {
 				try {
-					plugin.giveAward(e.getPlayer().getUniqueId(), dayaward, getRandLevel());
+					plugin.giveAward(e.getPlayer().getUniqueId(),
+							new QueryAward(dayaward, System.currentTimeMillis(), getRandLevel()));
 
 				} catch (SQLException er) {
 					Bukkit.getLogger()

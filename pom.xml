@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>JoinCollectables</groupId>
 	<artifactId>JoinCollectables</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1</version>
 	<repositories>
 		<repository>
 			<id>bukkit-repo</id>
@@ -23,7 +23,7 @@
 			<artifactId>CollectablesPlugin</artifactId>
 			<version>0.1-SNAPSHOT</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/lib/CollectablesPlugin-one.jar</systemPath>
+			<systemPath>${basedir}/lib/CollectablesPlugin-2.1.jar</systemPath>
 		</dependency>
 	</dependencies>
 	<build>
