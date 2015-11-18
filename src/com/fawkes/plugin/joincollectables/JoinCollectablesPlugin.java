@@ -75,7 +75,7 @@ public class JoinCollectablesPlugin extends JavaPlugin implements Listener {
 		// registers this plugin's listeners
 		Bukkit.getPluginManager().registerEvents(this, this);
 
-		Bukkit.getLogger().info("Enabling with month award: " + monthaward + "and day award: " + dayaward);
+		Bukkit.getLogger().info("Enabling with month award: " + monthaward + " and day award: " + dayaward);
 
 		// loads the plugin for API usage
 		plugin = this.getServer().getServicesManager().load(CollectablesPlugin.class);
@@ -104,7 +104,7 @@ public class JoinCollectablesPlugin extends JavaPlugin implements Listener {
 
 		day = c.get(Calendar.DAY_OF_MONTH);
 
-		daypath = monthpath + day;
+		daypath = monthpath + "." + day;
 
 		monthaward = calendar.getString(monthpath + ".month");
 
