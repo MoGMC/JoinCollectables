@@ -9,6 +9,7 @@ import java.nio.channels.ReadableByteChannel;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Random;
+import java.util.TimeZone;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -90,6 +91,8 @@ public class JoinCollectablesPlugin extends JavaPlugin implements Listener {
 		String daypath;
 
 		Calendar c = Calendar.getInstance();
+
+		c.setTimeZone(TimeZone.getTimeZone("UTC"));
 
 		monthpath = c.get(Calendar.YEAR) + "." + (c.get(Calendar.MONTH) + 1);
 
