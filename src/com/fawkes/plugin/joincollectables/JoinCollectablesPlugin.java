@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Random;
 import java.util.TimeZone;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -119,6 +120,25 @@ public class JoinCollectablesPlugin extends JavaPlugin implements Listener {
 
 	}
 
+	public void giveDelayedAward(UUID uuid, QueryAward award) {
+		Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					plugin.giveAward(uuid, award);
+
+				} catch (SQLException e) {
+					Bukkit.getLogger().severe("Could not give a JoinCollectable to a player on delayed join.");
+					e.printStackTrace();
+
+				}
+			}
+
+		}, 100L);
+
+	}
+
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent e) {
 
@@ -130,45 +150,21 @@ public class JoinCollectablesPlugin extends JavaPlugin implements Listener {
 
 		// if the player hasn't played before, give them the new player award!
 		if (!e.getPlayer().hasPlayedBefore()) {
-			try {
-				plugin.giveAward(e.getPlayer().getUniqueId(),
-						new QueryAward("newplayer", System.currentTimeMillis(), 1));
+			giveDelayedAward(e.getPlayer().getUniqueId(), new QueryAward("newplayer", System.currentTimeMillis(), 1));
 
-			} catch (SQLException er) {
-				Bukkit.getLogger()
-						.severe("Could not give 'New Player' award to player \"" + e.getPlayer().getName() + "\"");
-				er.printStackTrace();
-
-			}
 		}
 
 		// check if the player has this month's award
 		if (!plugin.hasAward(e.getPlayer().getUniqueId(), monthaward)) {
-			try {
-				plugin.giveAward(e.getPlayer().getUniqueId(),
-						new QueryAward(monthaward, System.currentTimeMillis(), getRandLevel()));
-
-			} catch (SQLException er) {
-				Bukkit.getLogger()
-						.severe("Could not give 'Monthly Award' award to player \"" + e.getPlayer().getName() + "\"");
-				er.printStackTrace();
-
-			}
+			giveDelayedAward(e.getPlayer().getUniqueId(),
+					new QueryAward(monthaward, System.currentTimeMillis(), getRandLevel()));
 
 		}
 
 		if (specialDay) {
 			if (!plugin.hasAward(e.getPlayer().getUniqueId(), dayaward)) {
-				try {
-					plugin.giveAward(e.getPlayer().getUniqueId(),
-							new QueryAward(dayaward, System.currentTimeMillis(), getRandLevel()));
-
-				} catch (SQLException er) {
-					Bukkit.getLogger()
-							.severe("Could not give 'Day Award' award to player \"" + e.getPlayer().getName() + "\"");
-					er.printStackTrace();
-
-				}
+				giveDelayedAward(e.getPlayer().getUniqueId(),
+						new QueryAward(dayaward, System.currentTimeMillis(), getRandLevel()));
 
 			}
 
