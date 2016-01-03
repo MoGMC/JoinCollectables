@@ -126,7 +126,7 @@ public class JoinCollectablesPlugin extends JavaPlugin implements Listener {
 			@Override
 			public void run() {
 				try {
-					plugin.giveAward(uuid, award);
+					plugin.giveAward(uuid, award, true, false);
 
 				} catch (SQLException e) {
 					Bukkit.getLogger().severe("Could not give a JoinCollectable to a player on delayed join.");
